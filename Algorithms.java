@@ -1,5 +1,16 @@
+/*	Author: Syed Faraz Abrar (19126296)
+ *	Purpose: This file contains all the mathematical algorithms required for
+ *			 RSA encryption. Every algorithm is described using comments below.
+ *	Last modified: 11/05/2019
+ */
+
 import java.util.Random;
 import java.math.BigInteger;
+
+/* Note: The text book that I refer to throughout all this code in various
+ * places is the following:
+ * Cryptography and Network Security: Principles and Practice (6th edition)
+ */
 
 public class Algorithms
 {
@@ -136,9 +147,9 @@ public class Algorithms
 		Random rand = new Random();
 		int a; // Random number less than n but > 1
 		
-		// According to lecture 6 slide 25, running this algorithm with
-		// 25 iterations should be enough, therefore k=25 iterations
-		int k = 25;
+		// According to my tutor Antoni, running this algorithm with
+		// 100 iterations should be enough, therefore k=100 iterations
+		int k = 100;
 
 		// Variables required for the Lehmann Primality Test
 		// as according to its description in Question 3 of Lab 2
