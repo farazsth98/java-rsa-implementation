@@ -6,10 +6,94 @@ public class Algorithms
 	// This method uses the Euclidean algorithm to return the
 	// greatest common denominator between the imported a and b
 	// integers
-	public static int euclid(int a, int b)
+	public static long euclid(long a, long b)
 	{
-		if (b == 0) return a;
-		else return euclid(b, a % b);
+		long temp = 0;
+
+		while (b != 0)
+		{
+			temp = b;
+			b = a % b;
+			a = temp;
+		}
+
+		return a;
+	}
+
+	// This method uses the Extended Euclidean Algorithm to return
+	// the Multiplicative Modular Inverse of a with modulo n
+	public static long extEuclid(long a, long n)
+	{
+		long temp = 0;
+		long quotient; // The quotient is stored each stage
+		long x0 = 1, y0 = 0; // Initial values of x and y
+		long x1 = 0, y1 = 1; // Secondary values of x and y
+		long tempX, tempY; // Used as intermediaries to swap x0,y0 with x1,y1
+
+		// We also have to store the original value of n in case
+		// x0 turns out to be a negative number
+		long origN = n;
+
+		// When n = 0, it means we have found the gcd
+		while (n != 0)
+		{
+			// Steps for the normal Euclidean algorithm
+			temp = n;
+			quotient = a / n;
+			n = a % n;
+			a = temp;
+			
+			// Extended Euclidean Algorithm requires us to update the x and y
+			// values with each step as well
+			// Refer to the textbook to understand why each step does what
+			// it does
+			tempX = x1;
+			tempY = y1;
+			x1 = x0 - quotient*x1;
+			y1 = y0 - quotient*y1;
+			x0 = tempX;
+			y0 = tempY;
+		}
+
+		// If x0 ends up being negative at this stage, we have to subtract
+		// |x0| from the original value of n to get the modular multiplcative
+		// inverse.
+		//
+		// If x0 is positive, then x0 is the modular multiplicative inverse.
+		if (x0 < 0) x0 = origN + x0;
+
+		return x0;
+	}
+
+	// This method does Fast Modular Exponentiation, which is used in
+	// encryption and decryption.
+	// The reason this method is used is because an intermediate step in
+	// both encryption and decryption creates a VERY large number that is
+	// very difficult to store in a variable.
+	//
+	// This implementation is taken from the book:
+	// Cryptography and Network Security: Principles and Practice (6th edition)
+	// Page 269, Figure 9.8
+	public static long fast_mod_exp(long base, long exponent, long modulus)
+	{
+		// Convert the exponent into an array of bits
+		long[] bits = longToBinary(exponent);
+
+		long c = 0, f = 1;
+
+		for (int i = 0; i < bits.length; i++)
+		{
+			c = 2*c;
+			f = (f * f) % modulus;
+
+			if (bits[i] == 1)
+			{
+				c++;
+				f = (f * base) % modulus;
+			}
+		}
+
+		return f;
 	}
 
 	// This method uses the Lehmann Algorithm to pick a random
@@ -117,5 +201,35 @@ public class Algorithms
 
 		// Else it is a prime
 		else return true;
+	}
+
+	// This method converts the imported long x into a binary representation
+	// that is stored in a long[] array where each index is a bit
+	// Adapted from my own implementation of SDES from assignment one
+	private static long[] longToBinary(long x)
+	{
+		String binaryString = Long.toBinaryString(x);
+		long[] bits = new long[binaryString.length()];
+
+		for (int i = 0; i < binaryString.length(); i++)
+		{
+			bits[i] = Character.getNumericValue(binaryString.charAt(i));
+		}
+
+		return bits;
+	}
+
+	// This method converts the imported long[] array of bits into a base 10
+	// long value
+	// Adapted from my own implementation of SDES from assignment one
+	private static long binaryToLong(long[] bits)
+	{
+		StringBuilder binary = new StringBuilder();
+		for (int i = 0; i < bits.length; i++)
+		{
+			binary.append(bits[i]);
+		}
+
+		return Long.parseLong(binary.toString(), 2);
 	}
 }
