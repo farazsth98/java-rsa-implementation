@@ -5,7 +5,6 @@
  */
 
 import java.util.Random;
-import java.math.BigInteger;
 
 /* Note: The text book that I refer to throughout all this code in various
  * places is the following:
@@ -136,7 +135,7 @@ public class Algorithms
 	// Step 2: Find r = a^((p-1)/2) mod p
 	// Step 3: If r != 1 and r-p != -1, then r is not a prime number
 	// 		   Else, r is probably a prime number
-	// Step 4: Perform this step 25 times to gain sufficient confidence
+	// Step 4: Perform this step 100 times to gain sufficient confidence
 	// 		   that r is a prime number
 	private static boolean isPrime(long p)
 	{
@@ -163,11 +162,7 @@ public class Algorithms
 		// false
 		boolean negativeOneFound = false;
 
-		// I use the BigInteger class here because the math here has a couple
-		// steps in between that result in really large numbers that might not
-		// be able to be stored in long variables
-		BigInteger bigA, bigR;
-		BigInteger bigP = BigInteger.valueOf(p);
+		// The exponent = ((p-1)/2)
 		int exponent;
 
 		// Iterate over k times
@@ -178,15 +173,13 @@ public class Algorithms
 			// exclusive max is given by
 			// rand.nextInt((max - min) + 1) + min
 			a = rand.nextInt(((int) p - 2) + 1) + 2;
-			bigA = BigInteger.valueOf(a);
 
 			// exponent is the exponent that a is raised to the power of
 			// In this case, it is ((p-1)/2)
 			exponent = (((int) p - 1) / 2);
 
-			// r = a ^ ((p-1)/2)
-			bigR = bigA.pow(exponent).mod(bigP);	
-			r = bigR.longValue();
+			// r = (a ^ ((p-1)/2)) mod p
+			r = fast_mod_exp(a, exponent, p);
 			
 			// If r is not 1 or -1, then do r-p
 			// If r-p is not equal to -1, then return false

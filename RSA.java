@@ -34,6 +34,10 @@ public class RSA
 		p = Algorithms.randomPrime(1000, 10000);
 		q = Algorithms.randomPrime(1000, 10000);
 
+		// We don't want p and q to be the same prime number as
+		// it weakens the keys, which is why this check is in place
+		while (q == p) q = Algorithms.randomPrime(1000, 10000);
+
 		// Calculate n and phi
 		n = p*q;
 		phi = (p-1) * (q-1);
@@ -43,6 +47,8 @@ public class RSA
 		publicKey = this.findPublicKey();
 		privateKey = Algorithms.extEuclid(publicKey, phi);
 
+		// Try to encrypt the testfile, and decrypt it back
+		// while making sure to catch the IO exceptions
 		try
 		{
 			this.encryptFile(filename);
