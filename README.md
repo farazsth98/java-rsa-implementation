@@ -9,3 +9,6 @@ but not limited to Fast Modular Exponentiation, the Extended Euclidean Algorithm
 Primality Testing algorithm.
 
 All of these algorithms can be found in Algorithms.java.
+
+**To compile:** cd into the directory and type `javac *.java`
+**To run:** `java Run`
